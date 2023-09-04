@@ -1,7 +1,7 @@
 from decimal import Decimal
 from flask import Response, request
 from app import app
-from app.openai_api import openai_query_generation, openai_graph_suggestion
+from app.openai_api import openai_query_generation
 from app.db import execute_query
 from app.helper import format_column_headers
 from app.service.fetch_graph_data import table_data
