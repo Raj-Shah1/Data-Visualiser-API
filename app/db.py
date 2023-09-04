@@ -9,11 +9,11 @@ load_dotenv()
 import os
 
 db_config = {
-    "dbname": "dvd_rental",
-    "user": "",
-    "password": "",
-    "host": "localhost",
-    "port": "5432",
+    "dbname": os.getenv("DB_NAME"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "host": os.getenv("DB_HOST"),
+    "port": os.getenv("DB_PORT"),
 }
 
 
