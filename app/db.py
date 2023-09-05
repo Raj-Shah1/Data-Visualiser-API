@@ -1,54 +1,14 @@
 import psycopg2
 from app import app
+from datetime import datetime
 
 from sqlalchemy import create_engine, MetaData, Table, inspect, text
 from dotenv import load_dotenv
+from run import connection
 
 load_dotenv()
 
-import os
-
-db_config = {
-    "dbname": os.getenv("DB_NAME"),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "host": os.getenv("DB_HOST"),
-    "port": os.getenv("DB_PORT"),
-}
-
-
-def connect_to_database():
-    try:
-        connection = psycopg2.connect(**db_config)
-        return connection
-    except Exception as e:
-        print(f"Error connecting to the database: {e}")
-        return None
-
-
-# def connect_to_database():
-#     # Step 1: Import the necessary modules
-
-#     # Step 2: Create a SQLAlchemy Engine
-#     # Replace 'postgresql://username:password@hostname:port/database_name' with your PostgreSQL connection URL
-#     # For example, if you have a local PostgreSQL server with username 'myuser' and no password on the 'mydatabase' database:
-#     # engine = create_engine('postgresql://myuser:@localhost:5432/mydatabase')
-#     engine = create_engine(os.getenv("DATABASE_CONNECTION_URL"))
-
-#     # Step 3: Establish a connection to the PostgreSQL database
-#     connection = engine.connect()
-
-#     # Step 4: Perform database operations
-#     # For example, you can execute SQL queries using the connection:
-#     # result = connection.execute("SELECT * FROM rental LIMIT 10")
-#     # for row in result:
-#     #     print(row)
-
-#     return connection
-
-
 def get_create_table_queries():
-    connection = connect_to_database()
     if connection:
         cursor = connection.cursor()
         cursor.execute(
@@ -70,7 +30,6 @@ def get_create_table_queries():
         """
         )
         create_table_queries = cursor.fetchall()
-        connection.close()
         return create_table_queries
     else:
         return []
@@ -104,7 +63,6 @@ def get_create_table_queries():
 
 
 def execute_query(query):
-    connection = connect_to_database()
     if connection:
         cursor = connection.cursor()
 
@@ -119,9 +77,122 @@ def execute_query(query):
 
         # Fetch all rows
         result = cursor.fetchall()
-        connection.close()
 
         # Return column headers and query result
         return column_headers, result
     else:
         return [], []
+  
+
+def create_sql_queries_table():
+    if connection:
+        cursor = connection.cursor()
+        try:
+            # Create the 'sql_queries' table if it doesn't exist
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS sql_queries (
+                    id SERIAL PRIMARY KEY,
+                    name VARCHAR(200) UNIQUE NOT NULL,
+                    query TEXT,
+                    created_at TIMESTAMP DEFAULT NOW(),
+                    updated_at TIMESTAMP DEFAULT NOW()
+                );
+            """)
+            connection.commit()
+            print("'sql_queries' table created successfully.")
+        except Exception as e:
+            print(f"Error creating 'sql_queries' table: {e}")
+            connection.rollback()
+
+
+def create_sql_queries_record(name, query):
+    
+    print("query_name: ", name)
+    print("query: ", query)
+    if connection:
+        cursor = connection.cursor()
+        try:
+            # Insert a new record into the 'sql_queries' table
+            cursor.execute("""
+                INSERT INTO sql_queries (name, query)
+                VALUES (%s, %s);
+            """, (name, query))
+            connection.commit()
+            print("SQL query record created successfully.")
+        except Exception as e:
+            print(f"Error creating SQL query record: {e}")
+            connection.rollback()
+
+
+def get_sql_queries_by_name(name):
+    if connection:
+        cursor = connection.cursor()
+        try:
+            # Retrieve the SQL query record by name
+            cursor.execute("""
+                SELECT query FROM sql_queries
+                WHERE name = %s;
+            """, (name,))
+            query_result = cursor.fetchone()
+            if query_result:
+                query = query_result[0]
+                print(f"SQL query with name '{name}':\n{query}")
+                return query
+            else:
+                print(f"No SQL query found with name '{name}'.")
+                return None
+        except Exception as e:
+            return (f"Error retrieving SQL query by name: {e}")
+    else:
+        return None
+    
+
+def get_sql_queries():
+    if connection:
+        cursor = connection.cursor()
+        try:
+            # Retrieve the SQL query records
+            cursor.execute("""
+                SELECT name, query FROM sql_queries 
+                ORDER BY updated_at DESC;
+            """)
+            query_result = cursor.fetchall()
+            return [{"name": name, "query": query} for name, query in query_result]
+        except Exception as e:
+            return (f"Error retrieving SQL query records: {e}")
+    else:
+        return None
+    
+
+def update_sql_query_record(name, query):
+    if connection:
+        cursor = connection.cursor()
+        try:
+            # Update the SQL query record
+            cursor.execute("""
+                UPDATE sql_queries
+                SET query = %s, updated_at = %s
+                WHERE name = %s;
+            """, (query, datetime.now(), name))
+            connection.commit()
+            print("SQL query record updated successfully.")
+        except Exception as e:
+            print(f"Error updating SQL query record: {e}")
+            connection.rollback()
+
+
+def delete_sql_query_record(name):
+    if connection:
+        cursor = connection.cursor()
+        try:
+            # Delete the SQL query record
+            cursor.execute("""
+                DELETE FROM sql_queries
+                WHERE name = %s;
+            """, (name,))
+            connection.commit()
+            print("SQL query record deleted successfully.")
+        except Exception as e:
+            print(f"Error deleting SQL query record: {e}")
+            connection.rollback()
+    
