@@ -3,10 +3,10 @@ from app.db import execute_query
 from app.helper import format_column_headers
 
 
-def table_data(user_query):
+def table_data(query):
     data = []
-    if user_query:
-        column_headers, answer = execute_query(user_query)
+    if query:
+        column_headers, answer = execute_query(query)
 
         formatted_column_headers = format_column_headers(column_headers)
 
