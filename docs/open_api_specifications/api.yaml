@@ -1,0 +1,56 @@
+openapi: 3.0.3
+info:
+  title: Chart Generator APIs
+  description: Following api's will be called from the Chart Generator Application
+  version: '1.0'
+servers:
+  - url: http://127.0.0.1:5000
+paths:
+  /generate-query:
+    post:
+      description: Api will generate the query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                  example: 'Write a SQL query which computes the payment amount for each country.'
+              required:
+                - question
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "SELECT * FROM country"
+                
+  /execute-query:
+    post: 
+      description: Api will execute the query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  example: "SELECT * FROM country"
+              required:
+                - question
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "[['Country'],['India'],['Nepal']]"
+    
