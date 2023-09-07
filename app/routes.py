@@ -57,7 +57,7 @@ def save_query_route():
         create_sql_queries_record(name, query)
         return "Query saved successfully.", 201
     else:
-        return "Record already exists. Kindly update the query name", 409
+        return "Record with the same query name already exists. Kindly update the query name", 409
     
 
 @app.route("/queries", methods=["GET"])
