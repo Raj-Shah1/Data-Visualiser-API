@@ -1,0 +1,194 @@
+openapi: 3.0.3
+info:
+  title: Chart Generator APIs
+  description: Following api's will be called from the Chart Generator Application
+  version: '1.0'
+servers:
+  - url: http://127.0.0.1:5000
+  
+components:
+  schemas:
+    response_400:
+      type: string
+      example: "Invalid request data"
+    response_404:
+      type: string
+      example: "Query not found"
+    response_409:
+      type: string
+      example: "Record already exists. Kindly update the query name"
+
+paths:
+  /queries/generate:
+    post:
+      summary: Generate Query
+      description: Generate a SQL query based on a user-provided question.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                  example: "Write a sql query to get country data"
+      responses:
+        '200':
+          description: Successful query generation
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "SELECT * FROM country;"
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_400"
+
+  /queries/execute:
+    post:
+      summary: Execute Query
+      description: Execute a SQL query and retrieve data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  example: "SELECT * FROM country;"
+      responses:
+        '200':
+          description: Successful query execution
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "[['Country'],['India'],['Nepal']]"
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_400"
+
+  /queries:
+    post:
+      summary: Save Query
+      description: Save a SQL query with a given name.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Country Data"
+                query:
+                  type: string
+                  example: "SELECT * FROM country;"
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_400"
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_409"
+          
+
+    get:
+      summary: Get Queries
+      description: Retrieve a list of saved SQL queries.
+      responses:
+        '200':
+          description: Successful query retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                      example: 1
+                    name:
+                      type: string
+                      example: "Country Data"
+                    query:
+                      type: string
+                      example: "SELECT * FROM country;"
+
+  /queries/{id}:
+    put:
+      summary: Update Query
+      description: Update an existing SQL query with a given name.
+      parameters:
+        - name: id
+          in: path
+          description: Queries Id
+          required: true
+          schema:
+            type: number
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  example: "SELECT * FROM country;"
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_400"
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_404"
+
+    delete:
+      summary: Delete Query
+      description: Delete a saved SQL query by name.
+      parameters:
+        - name: id
+          in: path
+          description: Queries Id
+          required: true
+          schema:
+            type: number
+            example: 1
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_404"
