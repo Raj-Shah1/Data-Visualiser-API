@@ -1,0 +1,233 @@
+{
+	"info": {
+		"_postman_id": "f478d559-6c58-4850-9ba7-d812b0eaf13f",
+		"name": "Data Visualisation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21294175"
+	},
+	"item": [
+		{
+			"name": "Generate Query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"question\":\"Get me the film count by languages\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/queries/generate",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"queries",
+						"generate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Execute Query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"query\": \"SELECT c.country, SUM(p.amount) AS total_payment FROM payment p JOIN customer cu ON p.customer_id = cu.customer_id JOIN address a ON cu.address_id = a.address_id JOIN city ci ON a.city_id = ci.city_id JOIN country c ON ci.country_id = c.country_id GROUP BY c.country;\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/queries/execute",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"queries",
+						"execute"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save Query",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"query\": \"SELECT c.country, SUM(p.amount) AS total_payment FROM payment p JOIN customer cu ON p.customer_id = cu.customer_id JOIN address a ON cu.address_id = a.address_id JOIN city ci ON a.city_id = ci.city_id JOIN country c ON ci.country_id = c.country_id GROUP BY c.country;\",\n    \"name\":\"Country wise Payment\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/queries",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"queries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Query",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"query\": \"SELECT c.country, SUM(p.amount) AS total_country_payment FROM payment p JOIN customer cu ON p.customer_id = cu.customer_id JOIN address a ON cu.address_id = a.address_id JOIN city ci ON a.city_id = ci.city_id JOIN country c ON ci.country_id = c.country_id GROUP BY c.country;\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/queries/7",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"queries",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Query",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/queries/7",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"queries",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Query",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/queries",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"queries"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
