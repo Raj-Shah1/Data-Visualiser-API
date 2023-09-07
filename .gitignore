@@ -3,3 +3,4 @@ settings.json
 __pycache__/
 service/__pycache__/
 .env
+.DS_Store

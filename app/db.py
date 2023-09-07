@@ -130,13 +130,13 @@ def get_sql_queries_by_name(name):
         try:
             # Retrieve the SQL query record by name
             cursor.execute("""
-                SELECT query FROM sql_queries
+                SELECT id FROM sql_queries
                 WHERE name = %s;
             """, (name,))
             query_result = cursor.fetchone()
             if query_result:
                 query = query_result[0]
-                print(f"SQL query with name '{name}':\n{query}")
+                print(f"SQL query with name '{name}' found.")
                 return query
             else:
                 print(f"No SQL query found with name '{name}'.")
@@ -147,24 +147,47 @@ def get_sql_queries_by_name(name):
         return None
     
 
+def get_sql_queries_by_id(id):
+    if connection:
+        cursor = connection.cursor()
+        try:
+            # Retrieve the SQL query record by name
+            cursor.execute("""
+                SELECT id FROM sql_queries
+                WHERE id = %s;
+            """, (id,))
+            query_result = cursor.fetchone()
+            if query_result:
+                query = query_result[0]
+                print(f"SQL query with id '{id}' found.")
+                return query
+            else:
+                print(f"No SQL query found with id '{id}'.")
+                return None
+        except Exception as e:
+            return (f"Error retrieving SQL query by id: {e}")
+    else:
+        return None
+    
+
 def get_sql_queries():
     if connection:
         cursor = connection.cursor()
         try:
             # Retrieve the SQL query records
             cursor.execute("""
-                SELECT name, query FROM sql_queries 
+                SELECT id, name, query FROM sql_queries 
                 ORDER BY updated_at DESC;
             """)
             query_result = cursor.fetchall()
-            return [{"name": name, "query": query} for name, query in query_result]
+            return [{"id": id, "name": name, "query": query} for id, name, query in query_result]
         except Exception as e:
             return (f"Error retrieving SQL query records: {e}")
     else:
         return None
     
 
-def update_sql_query_record(name, query):
+def update_sql_query_record(id, query):
     if connection:
         cursor = connection.cursor()
         try:
@@ -172,8 +195,8 @@ def update_sql_query_record(name, query):
             cursor.execute("""
                 UPDATE sql_queries
                 SET query = %s, updated_at = %s
-                WHERE name = %s;
-            """, (query, datetime.now(), name))
+                WHERE id = %s;
+            """, (query, datetime.now(), id))
             connection.commit()
             print("SQL query record updated successfully.")
         except Exception as e:
@@ -181,15 +204,15 @@ def update_sql_query_record(name, query):
             connection.rollback()
 
 
-def delete_sql_query_record(name):
+def delete_sql_query_record(id):
     if connection:
         cursor = connection.cursor()
         try:
             # Delete the SQL query record
             cursor.execute("""
                 DELETE FROM sql_queries
-                WHERE name = %s;
-            """, (name,))
+                WHERE id = %s;
+            """, (id,))
             connection.commit()
             print("SQL query record deleted successfully.")
         except Exception as e:
