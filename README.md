@@ -34,8 +34,10 @@ pip install -r requirements.txt
 python3 run.py
 ```
 
+
 ## Documentation
 
-1. [Open API Documentation](./docs/open_api_specifications/Data Visualiser.yaml)
-2. [Sequence Diagram](./docs/sequence_diagram/Data Visualisation.mermaid)
-3. [Postman Collection](./docs/postman_collection/Data Visualisation.postman_collection.json)
+- [Open API Documentation](./docs/open_api_specifications/Data%20Visualiser.yaml)
+- [Sequence Diagram](./docs/sequence_diagram/Data%20Visualisation.mermaid)
+- [Postman Collection](./docs/postman_collection/Data%20Visualisation.postman_collection.json)
+
