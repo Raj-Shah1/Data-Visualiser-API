@@ -8,7 +8,7 @@
 cp .env.sample .env
 ```
 
-2. Download python3 and pip3
+2. Download python3 and pip
 
 3. Create virtual environment
 
@@ -26,4 +26,10 @@ source venv/bin/activate
 
 ```
 pip install -r requirements.txt
+```
+
+6. Run the server
+
+```
+python3 run.py
 ```
