@@ -50,6 +50,12 @@ def save_query_route():
     query = str(json_data['query'])
     name = str(json_data['name'])
 
+    if name is None or name == "":
+        return "Invalid or empty query name. Please provide a valid query name.", 400
+    
+    if query is None or query == "":
+        return "Invalid or empty query. Please provide a valid query.", 400
+
     create_sql_queries_table()
     sql_query_data = get_sql_queries_by_name(name)
 
@@ -74,6 +80,9 @@ def update_query_route(id):
         return "Invalid request data", 400
     
     query = str(json_data['query'])
+
+    if query is None or query == "":
+        return "Invalid or empty query. Please provide a valid query.", 400
 
     sql_query_data_by_id = get_sql_queries_by_id(id)
 
